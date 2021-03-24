@@ -148,6 +148,6 @@ def main():
     output(dayob, name)
 
 if __name__ == "__main__":
-    #main()  #calls the main function by default whenever the code is run
+    main()  #calls the main function by default whenever the code is run
     #I'm never not using this, fight me
-    print(calc_first_day_of_month(12, 4, False))
+    #print(calc_first_day_of_month(12, 4, False))
