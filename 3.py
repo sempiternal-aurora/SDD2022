@@ -1,0 +1,2 @@
+c="wood"
+while c!="":
