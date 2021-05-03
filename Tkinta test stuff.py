@@ -57,44 +57,60 @@ class Page_Two(tk.Frame):
         operator_button.grid(row = 1, column = 1)
         equals_button = tk.Button(self, text = "=", command = lambda: self.calc_answer())
         equals_button.grid(row = 1, column = 3)
-        answer_entry = tk.Entry(self, textvariable = self.answer)
-        answer_entry.grid(row = 1, column = 4)
+        answer_label = tk.Label(self, textvariable = self.answer)
+        answer_label.grid(row = 1, column = 4)
 
     def change_operator(self):
-        if self.operator.get() == "+":
-            self.operator.set("-")
-        elif self.operator.get() == "-":
-            self.operator.set("x")
-        elif self.operator.get() == "x":
-            self.operator.set("÷")
-        elif self.operator.get() == "÷":
-            self.operator.set("^")
-        elif self.operator.get() == "^":
-            self.operator.set("+")
+        current_op = self.operator.get()
+        if current_op == "+": self.operator.set("-")
+        elif current_op == "-": self.operator.set("x")
+        elif current_op == "x": self.operator.set("÷")
+        elif current_op == "÷": self.operator.set("^")
+        elif current_op == "^": self.operator.set("+")
 
     def calc_answer(self):
-        n1 = float(self.number1.get())
-        n2 = float(self.number2.get())
-        if self.operator.get() == "+":
-            self.answer.set(str(n1 + n2))
-        elif self.operator.get() == "-":
-            self.answer.set(str(n1 - n2))
-        elif self.operator.get() == "x":
-            self.answer.set(str(n1 * n2))
-        elif self.operator.get() == "÷":
-            self.answer.set(str(n1 / n2))
-        elif self.operator.get() == "^":
-            self.answer.set(str(n1 ** n2))
+        answer = 0
+        operators = {"+":"+", "-":"-", "x":"*", "÷":"/", "^":"**"}
+        current_op = operators[self.operator.get()]
+        n1 = self.number1.get()
+        n2 = self.number2.get()
+        try:
+            answer = eval(n1 + current_op + n2)
+            self.answer.set(answer)
+        except:
+            self.answer.set("?")
 
-class Page_Three(tk.Frame):
+class Page_Three(tk.Frame): #my gif
     def __init__(self, parent, container):
         tk.Frame.__init__(self, parent)
+        self.image_frames = self.load_image()
+        self.image_index = 0
 
         label = tk.Label(self, text="Page Three")
         label.pack()
 
         button_page1 = tk.Button(self, text = "Go to page 1", command = lambda: container.show_frame(Page_One))
         button_page1.pack()
+
+        self.animation = tk.Label(self, image = self.image_frames[self.image_index])
+        self.animation.pack()
+
+        self.after(100, self.animate())
+    
+    def load_image(self):
+        target = "image0.gif"
+        frames = []
+        for i in range(25):
+            frame = tk.PhotoImage(file = target, format = "gif -index %i"%(i))
+            frames.append(frame)
+        return frames
+
+    def animate(self, *args):
+        if self.image_index < len(self.image_frames) - 1: self.image_index += 1
+        else: self.image_index = 0
+        next_image = self.image_frames[self.image_index]
+        self.animation.configure(image = next_image)
+        self.after(100, self.animate)
 
 my_app = App_Window("SDD 2021", "600x600")
 my_app.mainloop()
