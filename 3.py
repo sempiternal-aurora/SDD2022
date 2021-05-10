@@ -1,2 +1,0 @@
-c="wood"
-while c!="":
