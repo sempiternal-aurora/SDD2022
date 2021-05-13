@@ -12,10 +12,13 @@ class Tamagotchi():
         self.age = 0 #It follows it's whole life, so we start at 0
         self.weight = 15 #Not entirely sure about, but start at an ideal weight, or there abouts. May change this as we see fit
         self.poop = 0 #It has not existed long enough to poop yet, thus, no poop
+        self.time_since_poop = 0 #It has just been born, it cannot have pooped more then 0 seconds ago
+        self.sick = False #The tamagotchi is not born sick
+        self.is_alive = True #It is born alive
 
     def __str__(self):
         #just quickly assemble the stats of the tamagotchi into a string for testing
-        output_string = str(self.health) + " " + str(self.hunger) + " " + str(self.happiness) + " " + str(self.care) + " " + str(self.light) + " " + str(self.is_sleep) + " " + str(self.time_since_sleep) + " " + str(self.age) + " " + str(self.weight) + " " + str(self.poop)
+        output_string = str(self.health) + " " + str(self.hunger) + " " + str(self.happiness) + " " + str(self.care) + " " + str(self.light) + " " + str(self.is_sleep) + " " + str(self.time_since_sleep) + " " + str(self.age) + " " + str(self.weight) + " " + str(self.poop) + " " + str(self.time_since_poop) + " " + str(self.sick) + " " + str(self.is_alive)
         return output_string
 
     def feed_snack(self):
@@ -27,7 +30,10 @@ class Tamagotchi():
     def feed_meal(self):
         #adjusts the tamagotchi's stats when it eats a meal
         self.hunger += 50 #Increases hunger by about 1/5 of the maximum, as per the original tamagotchi
-        self.weight += 2 #Increases the weight by two, as per the original tamagotchis
+        self.weight += 2 #Increases the weight by two, as per the original 
+        
+    def get_variables(self):
+        return 255, 255, 255, 0, True, False, 0, 0, 15, 0, 0, False, True
 
-tamagotchi = Tamagotchi()
-print(tamagotchi)
+    def cycle_variables(self, health, hunger, happiness, care, is_sleep, time_since_sleep, age, poop, time_since_poop, sick, is_alive):
+        pass
