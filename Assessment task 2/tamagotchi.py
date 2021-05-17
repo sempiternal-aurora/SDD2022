@@ -37,3 +37,9 @@ class Tamagotchi():
 
     def cycle_variables(self, health, hunger, happiness, care, is_sleep, time_since_sleep, age, poop, time_since_poop, sick, is_alive):
         pass
+
+    def toggle_light(self):
+        pass
+
+    def bathroom(self):
+        pass
