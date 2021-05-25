@@ -1,10 +1,23 @@
 def increment_health(health, hunger, happiness, light, is_sleep, weight, poop):
+    """
+    Decreases and increases health based off the hunger, happiness, poop, and other variables
+    """
+    if hunger >= 32:
+        health += 3 - hunger//10
+    if happiness >= 32:
+        health += 3 - happiness//10
+    if not light:
+        if is_sleep:
+            health +=1
+    health -= int((((abs(weight - 30)+1)*(10**-1))**1.5))
+    health -= poop
     return health
 
 def increment_hunger(hunger):
     return hunger
 
 def increment_happiness(happiness):
+    happiness -= 1
     return happiness
 
 def increment_care(health, hunger, happiness, care):

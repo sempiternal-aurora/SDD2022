@@ -33,13 +33,17 @@ class Tamagotchi():
         self.weight += 2 #Increases the weight by two, as per the original 
         
     def get_variables(self):
-        return 255, 255, 255, 0, True, False, 0, 0, 15, 0, 0, False, True
+        return [255, 255, 255, 0, True, False, 0, 0, 15, 0, 0, False, True]
 
-    def cycle_variables(self, health, hunger, happiness, care, is_sleep, time_since_sleep, age, poop, time_since_poop, sick, is_alive):
+    def cycle_variables(self, cycled_list):
+        health = cycled_list[0]
         pass
 
     def toggle_light(self):
         pass
 
     def bathroom(self):
+        pass
+
+    def medicine(self):
         pass
