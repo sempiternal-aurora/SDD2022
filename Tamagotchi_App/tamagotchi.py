@@ -33,10 +33,9 @@ class Tamagotchi():
         self.weight += 2 #Increases the weight by two, as per the original 
         
     def get_variables(self):
-        return [255, 255, 255, 0, True, False, 0, 0, 15, 0, 0, False, True]
+        return [255, 255, 250, 0, True, False, 0, 0, 15, 0, 0, False, True]
 
     def cycle_variables(self, cycled_list):
-        health = cycled_list[0]
         pass
 
     def toggle_light(self):
@@ -46,4 +45,7 @@ class Tamagotchi():
         pass
 
     def medicine(self):
+        pass
+
+    def game(self, is_correct):
         pass
