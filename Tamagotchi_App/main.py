@@ -1,5 +1,4 @@
 import tamagotchi as tg
-import cycle
 import threading
 import time
 import tkinter as tk
@@ -14,6 +13,7 @@ is_pause = False
 is_end = False
 
 CYCLE_TIME = 2 #how many seconds between each cycle
+UPDATE_SPEED = 100 #How many milliseconds between each time the App_Window syncs with the tamagotchi
 
 class App_Window(tk.Tk):
     #the actual window that the app exist in, a tkinter construct
@@ -31,27 +31,11 @@ class App_Window(tk.Tk):
             frame.grid(row = 0, column = 0, sticky = 'nsew') #they go in the center of the window, sticking to all of the edges
         
         self.show_frame(Main_Page) #start by showing the main page, in case another one initialised over the top of it
-        self.check_stats() #Start checking the Tamagotchi's stats
 
     def show_frame(self, container): 
         #takes the frame requested, and raises it to the top, essentially showing it from the perspective of the user, even though it was there the whole time
         frame = self.frames[container]
         frame.tkraise()
-
-    def check_stats(self):
-        #Checks and syncs the GUI with the tamagotchi's current state every 100ms
-        self.stat_list = tamagotchi.get_variables() #get all of the tamagotchi's current variables
-        if self.stat_list[12] == False: #If the Tamagotchi is dead
-            global is_pause 
-            is_pause = True #while the tamagotchi is dead, it should not be possible for any of the varaibles to be cycled
-            self.show_frame(Death_Page) #show the death page, where they can chose to reset or quit
-        self.update_stats_page() #call the function that updates the stats page's stat labels
-        self.after(100, self.check_stats) #runs itself again after 100ms
-
-    def update_stats_page(self):
-        #updates the stats page whenever the stats of the GUI are synced with the Tamagotchi's
-        frame = self.frames[Stat_Page] #run the update stats function on the approiate variable. All of the pages are kept in this list, so they need to be extracted before their functions can be called. 
-        frame.update_stats(self.stat_list)
 
 class Feed_Page(tk.Frame):
     def __init__(self, parent, container):
@@ -97,6 +81,8 @@ class Death_Page(tk.Frame):
         close_button = tk.Button(self, text = "Exit", padx = 50, pady = 25, command = lambda: self.quit(container)) #A button that when pressed, saves the tamagotchi before closing the program
         close_button.grid(column = 0, row = 2)
 
+        self.after(UPDATE_SPEED, lambda: self.check_death(container))
+
     def quit(self, container):
         #saves the tamagotchi's data, before quitting
         global tamagotchi
@@ -111,6 +97,16 @@ class Death_Page(tk.Frame):
         tamagotchi = tg.Tamagotchi() #Reinitalises the tamagotchi as a whole new instance.
         is_pause = False #stops the pause, restarting the regular cycling of the tamagotchi
         container.show_frame(Main_Page) #shows the main page again
+
+    def check_death(self, container):
+        if not tamagotchi.is_alive:
+            global is_pause
+            is_pause = True
+            container.show_frame(Death_Page)
+            while not tamagotchi.is_alive:
+                speed = round(UPDATE_SPEED/1000, 1)
+                time.sleep(speed)
+        self.after(100, lambda: self.check_death(container))            
 
 class Stat_Page(tk.Frame): 
     #the page that shows the stats of the tamagotchi for the user.
@@ -138,28 +134,36 @@ class Stat_Page(tk.Frame):
         weight_meter = tk.Label(self, textvariable = self.weight)#The label that displays the Tamagotchi's current weight
         weight_meter.grid(column = 1, row = 5, pady = 50)
 
-    def update_health_meter(self, health):
-        self.health.set(str(health)) #updates the health label's variable, thus updating the label
+        self.update_stats()
 
-    def update_hunger_meter(self, hunger):
-        self.hunger.set(str(hunger)) #updates the hunger label's variable, thus updating the label
+    def update_health_meter(self):
+        health = str(tamagotchi.health)
+        self.health.set(health) #updates the health label's variable, thus updating the label
 
-    def update_happiness_meter(self, happiness):
-        self.happiness.set(str(happiness)) #updates the happiness label's variable, thus updating the label
+    def update_hunger_meter(self):
+        hunger = str(tamagotchi.hunger)
+        self.hunger.set(hunger) #updates the hunger label's variable, thus updating the label
 
-    def update_age(self, age):
-        self.age.set(str(age)) #updates the age label's variable, thus updating the label
+    def update_happiness_meter(self):
+        happiness = str(tamagotchi.happiness)
+        self.happiness.set(happiness) #updates the happiness label's variable, thus updating the label
 
-    def update_weight(self, weight):
-        self.weight.set(str(weight)) #updates the weight label's variable, thus updating the label
+    def update_age(self):
+        age = str(tamagotchi.age)
+        self.age.set(age) #updates the age label's variable, thus updating the label
 
-    def update_stats(self, stat_list):
+    def update_weight(self):
+        weight = str(tamagotchi.weight)
+        self.weight.set(weight) #updates the weight label's variable, thus updating the label
+
+    def update_stats(self):
         #The function that is run to update the various meters to show the tamagotchi's most recent varaibles
-        self.update_health_meter(stat_list[0]) #Update the health label
-        self.update_hunger_meter(stat_list[1])#Update the hunger label
-        self.update_happiness_meter(stat_list[2]) #update the happiness label
-        self.update_age(stat_list[7]) #update the age label
-        self.update_weight(stat_list[8]) #update the weight label
+        self.update_health_meter() #Update the health label
+        self.update_hunger_meter()#Update the hunger label
+        self.update_happiness_meter() #update the happiness label
+        self.update_age() #update the age label
+        self.update_weight() #update the weight label
+        self.after(UPDATE_SPEED, lambda: self.update_stats())
 
 class Menu_Page(tk.Frame):
     #The main menu page, holding the buttons to either close the GUI, or save the Tamagotchi's data to a save file
@@ -214,7 +218,6 @@ class Game_Page(tk.Frame):
 
     def play_game(self, button):
         #The function that determines if the user was correct, and adjusts things accordingly
-        global tamagotchi
         if button == self.correct_button: #If what the user guessed matched the right answer they were correct
             is_correct = True
         else: #If it didn't they were wrong
@@ -229,10 +232,9 @@ class Game_Page(tk.Frame):
 class Main_Page(tk.Frame):
     #The main page that the user will spend most of their time on. Has all of the buttons to navigate to the required pages
     def __init__(self, parent, container):
-        stat_list = tamagotchi.get_varaibles #Get the state of the tamagotchi's light
-        light = stat_list[4]
+        light = tamagotchi.light #Get the state of the tamagotchi's light
         if light: #If it is on, make it a light grey background
-            tk.Frame.__init__(self, parent, bg = "gray90")
+            tk.Frame.__init__(self, parent, bg = "yellow")
         else: #If it isn't, make it a dark grey background
             tk.Frame.__init__(self, parent, bg = "gray30")
 
@@ -262,12 +264,11 @@ class Main_Page(tk.Frame):
 
     def toggle_background(self):
         #A function to change the background colour of the frame to show the whether the light is on
-        stat_list = tamagotchi.get_varaibles #Get the state of the light from the tamagotchi
-        light = stat_list[4]
+        light = tamagotchi.light #Get the state of the light from the tamagotchi
         if light: #If it is on, make it a light grey background
-            Main_Page.configure(bg = "gray90")
+            Main_Page.configure(self, bg = "yellow")
         else: #If it isn't, make it a dark grey background
-            Main_Page.configure(bg = "gray30")
+            Main_Page.configure(self, bg = "gray30")
 
     def show_menu(self, target, container):
         #A function that pauses the cycle, before showing the user the menu page
@@ -289,24 +290,23 @@ def cycle_thread():
     while is_end == False: #is_end is naturally set to True when the GUI is closed by whatever method, so, until this happens, it is an infinite loop
         if is_pause == False: #This means it only actually cycles the varaibles if the tamagotchi isn't paused
             cycle_main() #The calling of the cycle function
+        print(tamagotchi)
         time.sleep(CYCLE_TIME) #Because this is a thread, doing this doesn't actually stop the whole program, just this thread. So it is fine
 
 def cycle_main():
     #Takes all of the values of the tamagotchi, adjusts them as they naturally would with time, and updates the Tamagotchi to these new updates variables
     #The get_variables returns a list, which has the following values in it per their index
     #0 = health, 1 = hunger, 2 = happiness, 3 = care, 4 = light, 5 = is_sleep, 6 = time_since_sleep, 7 = age, 8 = weight, 9 = poop, 10 = time_since_poop, 11 = sick, 12 = is_alive
-    stat_list = tamagotchi.get_variables() #Get all of the current varaibles
-    cycled_health = cycle.increment_health(stat_list[0], stat_list[1], stat_list[2], stat_list[4], stat_list[5], stat_list[8], stat_list[9]) #increments the Tamagotchis health based on it's current health, hunger, happiness, light, is_sleep, weight and poop
-    cycled_hunger = cycle.increment_hunger(stat_list[1]) #increments hunger
-    cycled_happiness = cycle.increment_happiness(stat_list[2]) #increments happiness
-    cycled_care = cycle.increment_care(stat_list[0], stat_list[1], stat_list[2], stat_list[3]) #increments care based on health, hunger and happiness
-    cycled_is_sleep, cycled_time_since_sleep = cycle.check_sleep(stat_list[5], stat_list[6]) #determines if the tamagotchi is asleep from is_sleep and time_since_sleep, as well as updating how long it has been since this has changed, or time_since_sleep
-    cycled_age = cycle.increment_age(stat_list[7]) #increments the age by a small amount
-    cycled_poop, cycled_time_since_poop = cycle.increment_poop(stat_list[9], stat_list[10]) #determine how many poops it should have based off of poop and time_since_poop
-    cycled_sick = cycle.is_sick(stat_list[11], stat_list[0]) #determines if it is sick with is_sick and health
-    cycled_is_alive = cycle.is_dead(stat_list[12], stat_list[0]) #Based on the tamagotchi's health, determines whether it is alive
-    stat_list = [cycled_health, cycled_hunger, cycled_happiness, cycled_care, cycled_is_sleep, cycled_time_since_sleep, cycled_age, cycled_poop, cycled_time_since_poop, cycled_sick, cycled_is_alive]
-    tamagotchi.cycle_variables(stat_list) #Update the varaibles with the new cycled ones
+    global tamagotchi
+    tamagotchi.increment_health() #increments the Tamagotchis health based on it's current health, hunger, happiness, light, is_sleep, weight and poop
+    tamagotchi.increment_hunger() #increments hunger
+    tamagotchi.increment_happiness() #increments happiness
+    tamagotchi.increment_care() #increments care based on health, hunger and happiness
+    tamagotchi.check_sleep() #determines if the tamagotchi is asleep from is_sleep and time_since_sleep, as well as updating how long it has been since this has changed, or time_since_sleep
+    tamagotchi.increment_age() #increments the age by a small amount
+    tamagotchi.increment_poop() #determine how many poops it should have based off of poop and time_since_poop
+    tamagotchi.is_sick() #determines if it is sick with is_sick and health
+    tamagotchi.is_dead() #Based on the tamagotchi's health, determines whether it is alive
 
 def convert_bool(string):
     """
@@ -385,10 +385,9 @@ def main():
     #The main part of the program
     #Firstly, collect necessary global varaibles
     global is_end
-    global tamagotchi
     os.chdir("Tamagotchi_App") #This changes the main directory the program is running in to be the directory we want for all of the program to work, or the main one which python file is in, instead of one below it
-    stat_list = load() #This loads all of the values from a text file
-    tamagotchi.cycle_variables(stat_list) #This then takes those loaded values and changes the tamagotchi to start with them, basically loading up the last saved state
+    #stat_list = load() #This loads all of the values from a text file
+    #tamagotchi.cycle_variables(stat_list) #This then takes those loaded values and changes the tamagotchi to start with them, basically loading up the last saved state
     thread = threading.Thread(target= lambda: cycle_thread()) #This starts a thread which the cycle runs on, so it is seperate from the app_window and is thus not hindered by it stopping on the next line
     thread.start()
     my_app = App_Window() #Initialises the app_window
