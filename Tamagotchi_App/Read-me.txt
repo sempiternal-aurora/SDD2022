@@ -1,0 +1,9 @@
+Tamagotchi App developed by Myria (Patrick), Lucas, and Harry.
+
+The Tamagotchi gif is an image made by the owner of https://tientit.wordpress.com/page/2/. 
+It has a creative commons liscence, and we are free to use it commercially. 
+We cropped it to better fit the program, but that is all we have modifed in it.
+
+Before running the program, make sure that python is up to date, you do not need to install any external libraries, as we have just used the inbuilt python libraries
+
+To start the game, simply run the Main.py Python file.

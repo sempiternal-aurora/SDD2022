@@ -183,8 +183,8 @@ class Menu_Page(tk.Frame):
         label.grid(column = 1, row = 0, padx = 150)
 
         save_button = tk.Button(self, text = "Save", padx = 50, pady = 25, command = lambda: self.save_button()) #A button that saves the tamagotchi's data when pressed
-        save_button.grid(column = 1, row = 1, pady = 100)
-        close_button = tk.Button(self, text = "Exit", padx = 55, pady = 25, command = lambda: container.destroy()) #A button that destroys the whole GUI when pressed, effectively ending the program
+        save_button.grid(column = 1, row = 1, pady = 50)
+        close_button = tk.Button(self, text = "Exit", padx = 50, pady = 25, command = lambda: container.destroy()) #A button that destroys the whole GUI when pressed, effectively ending the program
         close_button.grid(column = 1, row = 2)
 
     def show_main(self, container):
@@ -264,7 +264,7 @@ class Main_Page(tk.Frame):
             tk.Frame.__init__(self, parent, bg = "yellow")
         else: #If it isn't, make it a dark grey background
             tk.Frame.__init__(self, parent, bg = "gray30")
-
+        
         self.poop = tk.StringVar() #A variable that will display the current amount of poop
         self.sleep_label = tk.StringVar() #A variable that will tell the user whether the tamagotchi is asleep
         self.image_frames = self.load_image() #Loads the frames of the tamagotchi for the icon
@@ -302,7 +302,7 @@ class Main_Page(tk.Frame):
         self.check_sleep() #Checks whether the tamagotchi is asleep, and shows this for the user
         self.animate() #updates the tamagotchi Image to show the next frame of the gif
         self.after(UPDATE_SPEED, self.update_main_page) #Runs this function after UPDATE_SPEED ms, continously updating the main page
-
+    
     def check_sleep(self):
         #Updates the label that tells the user whether the tamagotchi is sleeping
         sleep = tamagotchi.is_sleep #checks whether the tamagotchi is sleeping
@@ -324,7 +324,7 @@ class Main_Page(tk.Frame):
         else: self.image_index = 0 #Otherwise, set it to 0
         next_image = self.image_frames[self.image_index] #The next image in the slideshow of the gif is the picture that represents the current index
         self.tamagotchi_icon.configure(image = next_image) #Sets the icon on the actual page to the next image of the gif, effictively animating the picture
-
+    
     def check_poop(self):
         #A quick function to read the poop from the tamagotchi, and update the label on the main page to show this
         poop = str(tamagotchi.poop) #Get the poop value from the tamagotchi and save it to the variable used by the poop_meter, thus updating the meter

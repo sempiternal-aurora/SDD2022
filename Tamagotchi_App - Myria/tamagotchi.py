@@ -49,13 +49,18 @@ class Tamagotchi():
         (self.health, self.hunger, self.happiness, self.care, self.light, self.is_sleep,self.time_since_sleep, self.age, self.weight, self.poop, self.time_since_poop,self.sick, self.is_alive) = stat_list
 
     def toggle_light(self):
-        pass
+        #toggles the light of the tamagotchi whenever the function is called
+        self.light = not self.light
 
     def bathroom(self):
-        pass
+        #Clears all of the poop whenever the function is called
+        self.poop = 0
 
     def medicine(self):
-        pass
+        #increments health by 50 whenever the tamagotchi is treated with medicine
+        self.health += 50
+        if self.health > 255: #If health exceeds the maximum of 255 during this, it resets it to 255
+            self.health = 255
 
     def game(self, is_correct) -> None:
         if is_correct:
@@ -82,7 +87,10 @@ class Tamagotchi():
             self.health = 0
 
     def increment_hunger(self):
-        pass
+        #slowly deteriorates the hunger of the tamagotchi over time in the cycle function
+        self.hunger -= 1
+        if self.hunger < 0: #The minimum for hunger is 0, so, sets it to 0 if it goes below
+            self.hunger = 0
 
     def increment_happiness(self) -> None:
         self.happiness -= 1 
@@ -120,7 +128,15 @@ class Tamagotchi():
             self.poop = 4
 
     def is_sick(self):
-        pass
+        #makes the tamagotchi sick if it's health is below 100
+        if self.health <= 100:
+            self.sick = True
+        else: #If it is above 100, makes the tamagothi not sick
+            self.sick = False
 
     def is_dead(self):
-        pass
+        #sets the state of the tamagotchi to dead if it is at 0 health
+        if self.health == 0:
+            self.is_alive = False
+        else: #Otherwise, sets the tamagotchi to be alive
+            self.is_alive = True
