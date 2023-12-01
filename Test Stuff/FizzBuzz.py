@@ -1,14 +1,11 @@
 def three_five(num):
-    if num%5==0 and num%3==0: return True
-    else: return False
+    return (num%5==0 and num%3==0)
 
 def three(num):
-    if num%3==0: return True
-    else: return False
+    return num%3==0
     
 def five(num):
-    if num%5==0: return True
-    else: return False
+    return num%5==0
 
 def FizzBuzz_Main():
     start = int(input("Enter the start: "))
