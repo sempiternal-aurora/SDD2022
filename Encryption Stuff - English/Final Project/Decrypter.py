@@ -8,13 +8,13 @@ def main():
     while key.upper() != "R":
         print("Oh no, that doesn't seem to be right, try again?")
         key = input("Enter your guess here, followed by the enter key: ")
-    file = file_encryption.open_encrypted_file("Encypted_File.txt")
+    file = file_encryption.open_encrypted_file("Encrypted_File.txt")
     file = file_encryption.str_to_encrypted_list(file)
     file = file_encryption.decrypt_int_list(file, key.upper())
     file = file_encryption.to_bytes_list(file)
     if os.path.isfile("Decrypted_File.pdf"):
         os.remove("Decrypted_File.pdf")
-    file_encryption.write_file("raw_data.pdf", file)
+    file_encryption.write_file("Decrypted_File.pdf", file)
     print("\nYay! You were correct! Congratulations, happy decrypting!")
     print("(Don't worry, this will close soon)")
     time.sleep(10)
