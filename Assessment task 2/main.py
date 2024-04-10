@@ -102,8 +102,14 @@ class Menu_Page(tk.Frame):
     def __init__(self, parent, container):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text="Page One")
-        label.pack()
+        close_button = tk.Button(self, text = "X", command = lambda: container.show_frame(Main_Page))
+        close_button.grid(column = 0, row = 0)
+        label = tk.Label(self, text="Menu Page")
+        label.grid(column = 1, row = 0, padx = 150)
+        save_button = tk.Button(self, text = "Save", padx = 50, pady = 25, command = lambda: save())
+        save_button.grid(column = 1, row = 1, pady = 50)
+        close_button = tk.Button(self, text = "Exit", padx = 50, pady = 25, command = lambda: container.destroy())
+        close_button.grid(column = 1, row = 2)
 
 class Game_Page(tk.Frame):
     def __init__(self, parent, container):
@@ -116,21 +122,21 @@ class Main_Page(tk.Frame):
     def __init__(self, parent, container):
         tk.Frame.__init__(self, parent)
 
-        icon_menu = tk.Button(self, text = "Icon", command = lambda: container.show_frame(Menu_Page))
+        icon_menu = tk.Button(self, text = "Menu", command = lambda: container.show_frame(Menu_Page))
         icon_menu.grid(column = 0, row = 0, sticky = "w")
         stat_menu = tk.Button(self, text = "Stats", command = lambda: container.show_frame(Stat_Page))
         stat_menu.grid(column = 4, row = 0, sticky = "e")
         label = tk.Label(self, text = "Main Page")
-        label.grid(column = 1, columnspan = 3, row = 0, padx = 122)
+        label.grid(column = 1, columnspan = 3, row = 0, padx = 119)
         #tamagotchi_image = tk.PhotoImage(file = "tamagotchi.gif")
         #tamagotchi_icon = tk.Label(self, image = tamagotchi_image)
         #tamagotchi_icon.grid(column = 0, columnspan = 5, row = 1)
         feed_menu = tk.Button(self, text = "Feed", command = lambda: container.show_frame(Feed_Page))
         feed_menu.grid(column = 0, row = 2)
         play_game = tk.Button(self, text = "Play", command = lambda: container.show_frame(Game_Page))
-        play_game.grid(column = 1, row = 2)
+        play_game.grid(column = 1, row = 2, sticky = "w")
         light_button = tk.Button(self, text = "Light", command = lambda: tamagotchi.toggle_light())
-        light_button.grid(column = 3, row = 2)
+        light_button.grid(column = 3, row = 2, sticky = "e")
         bathroom_button = tk.Button(self, text = "Bathroom", command = lambda: tamagotchi.bathroom())
         bathroom_button.grid(column = 4, row = 2)
 
@@ -154,6 +160,9 @@ def cycle_main():
     tamagotchi.cycle_variables(cycled_health, cycled_hunger, cycled_happiness, cycled_care, cycled_is_sleep, cycled_time_since_sleep, cycled_age, cycled_poop, cycled_time_since_poop, cycled_sick, cycled_is_alive)
 
 def load():
+    pass
+
+def save():
     pass
 
 def main():
