@@ -19,7 +19,7 @@ def main():
         else:
             print("That is incorrect, the correct answer was", answer)
         input("Press enter for the next question")
-        difficulty = input("Enter a difficulty : ")
+        difficulty = input("Enter a difficulty level: ")
         answer, question = generate_question("A" + str(difficulty))
         print(question)
         user_answer = int(input("Answer: "))
