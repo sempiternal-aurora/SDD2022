@@ -4,6 +4,7 @@ import time
 import tkinter as tk
 import os
 import random
+from tkinter.ttk import Progressbar as Progressbar
 
 global tamagotchi
 global is_pause
@@ -121,18 +122,28 @@ class Stat_Page(tk.Frame):
         close_page = tk.Button(self, text = "X", command = lambda: container.show_frame(Main_Page)) # a button that returns the user to the main page
         close_page.grid(column = 0, row = 0)
         label = tk.Label(self, text="Stat Page") #A label to inform the user of what page they are on
-        label.grid(column = 1, row = 0) 
+        label.grid(column = 1, row = 0, columnspan = 2) 
 
-        health_meter = tk.Label(self, textvariable = self.health) #The label that displays the Tamagotchi's current health
-        health_meter.grid(column = 1, row = 1, padx = 175, pady = 50)
-        hunger_meter = tk.Label(self, textvariable = self.hunger)#The label that displays the Tamagotchi's current hunger
-        hunger_meter.grid(column = 1, row = 2)
-        happiness_meter = tk.Label(self, textvariable = self.happiness)#The label that displays the Tamagotchi's current happiness
-        happiness_meter.grid(column = 1, row = 3, pady = 50)
-        age_meter = tk.Label(self, textvariable = self.age)#The label that displays the Tamagotchi's current age
-        age_meter.grid(column = 1, row = 4)
-        weight_meter = tk.Label(self, textvariable = self.weight)#The label that displays the Tamagotchi's current weight
-        weight_meter.grid(column = 1, row = 5, pady = 50)
+        health_label = tk.Label(self, text = "Health:")
+        health_label.grid(column = 1, row = 1, sticky = "e")
+        health_meter = Progressbar(self, orient = "horizontal", length = 250, mode = "determinate", maximum = 255, variable = self.health) #The bar that displays the Tamagotchi's current health
+        health_meter.grid(column = 2, row = 1, pady = 50, padx = 20)
+        hunger_label = tk.Label(self, text = "Hunger:")
+        hunger_label.grid(column = 1, row = 2, sticky = "e")
+        hunger_meter = Progressbar(self, orient = "horizontal", length = 250, mode = "determinate", maximum = 255, variable = self.hunger) #The bar that displays the Tamagotchi's current hunger
+        hunger_meter.grid(column = 2, row = 2, padx = 20)
+        happiness_label = tk.Label(self, text = "Happiness:")
+        happiness_label.grid(column = 1, row = 3, sticky = "e")
+        happiness_meter = Progressbar(self, orient = "horizontal", length = 250, mode = "determinate", maximum = 255, variable = self.happiness) #The label that displays the Tamagotchi's current happiness
+        happiness_meter.grid(column = 2, row = 3, pady = 50, padx = 20)
+        age_label = tk.Label(self, text = "Age:")
+        age_label.grid(column = 1, row = 4, sticky = "e")
+        age_meter = tk.Label(self, textvariable = self.age) #The label that displays the Tamagotchi's current age
+        age_meter.grid(column = 2, row = 4, sticky = "w")
+        weight_label = tk.Label(self, text = "Weight:")
+        weight_label.grid(column = 1, row = 5, sticky = "e")
+        weight_meter = tk.Label(self, textvariable = self.weight) #The label that displays the Tamagotchi's current weight
+        weight_meter.grid(column = 2, row = 5, pady = 50, sticky = "w")
 
         self.update_stats()
 
@@ -245,9 +256,11 @@ class Main_Page(tk.Frame):
         label = tk.Label(self, text = "Main Page") #A label to tell the user that this is the main page
         label.grid(column = 1, columnspan = 3, row = 0, padx = 119)
 
-        tamagotchi_image = tk.PhotoImage(file = "images/tamagotchi.png") #The actual tamagotchi sprite, loaded up from a file
+        tamagotchi_image = tk.PhotoImage(file = "images/tamagotchi.ppm") #The actual tamagotchi sprite, loaded up from a file
+        print("load image")
         tamagotchi_icon = tk.Label(self, image = tamagotchi_image)
         tamagotchi_icon.grid(column = 0, columnspan = 5, row = 1)
+        print("label pack")
         feed_menu = tk.Button(self, text = "Feed", command = lambda: container.show_frame(Feed_Page)) #A button that sends the user the the feed page when pressed
         feed_menu.grid(column = 0, row = 2)
         play_game = tk.Button(self, text = "Play", command = lambda: container.show_frame(Game_Page)) #A button that sends the user to the play game page when pressed
@@ -388,7 +401,7 @@ def main():
     os.chdir("Tamagotchi_App") #This changes the main directory the program is running in to be the directory we want for all of the program to work, or the main one which python file is in, instead of one below it
     #stat_list = load() #This loads all of the values from a text file
     #tamagotchi.cycle_variables(stat_list) #This then takes those loaded values and changes the tamagotchi to start with them, basically loading up the last saved state
-    thread = threading.Thread(target= lambda: cycle_thread()) #This starts a thread which the cycle runs on, so it is seperate from the app_window and is thus not hindered by it stopping on the next line
+    thread = threading.Thread(target = cycle_thread) #This starts a thread which the cycle runs on, so it is seperate from the app_window and is thus not hindered by it stopping on the next line
     thread.start()
     my_app = App_Window() #Initialises the app_window
     my_app.mainloop()
