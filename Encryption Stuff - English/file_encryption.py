@@ -24,7 +24,7 @@ def open_file(target) -> list:
             file.append(i)
     return file
 
-def open_encrypted_file(target):
+def open_encrypted_file(target) -> str:
     #opens a file and stores all of the plain text as a string
     with open(target, 'r') as f:
         for i in f:
@@ -49,26 +49,26 @@ def write_encrypted_file(target, data) -> None:
         for i in data:
             f.write(str(i))
 
-def write_file(target, data):
+def write_file(target, data) -> None:
     #Takes a list of bytes, and creates a new file at the target with all of the bytes as the data
     with open(target, "xb") as f:
         for i in data:
             f.write(i)
 
-def xor(character, key):
+def xor(character, key) -> str:
     #preforms the xor algorithm on the character and with the key
     code = ord(character) ^ ord(key)
     result = chr(code)
     return result
 
-def encrypt_xor(string, key):
+def encrypt_xor(string, key) -> str:
     #takes a string, and cycles through each character in the string, preforming the xor algorithm on each
     encrypted = ''
     for c in string:
         encrypted += xor(c, key)
     return encrypted
 
-def encrypt_int_list(int_list, key):
+def encrypt_int_list(int_list, key) -> list:
     #takes a list of lists of somethings and encrypts each parts of those lists with the xor algorithm
     encrypted_list = []
     for i in range(len(int_list)):
@@ -79,7 +79,7 @@ def encrypt_int_list(int_list, key):
         encrypted_list.append(new_list)
     return encrypted_list
 
-def decrypt_int_list(str_list, key):
+def decrypt_int_list(str_list, key) -> list:
     #takes a list of lists of strings, and decrypts each string to become a list of lists of integers
     decrypted_list = []
     for i in range(len(str_list)):
