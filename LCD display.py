@@ -1,10 +1,10 @@
 def user_input():
     #A very nice program that asks the user to input a number and a size
     number = input("Hello there, what number do you want to be LCD’d (0 ≤ n ≤ 99999999)? ")
-    while len(number) > 8 or len(number) == 0 or number.isnumeric() == False:
+    while len(number) > 8 or len(number) == 0 or number.isnumeric() == False: #If they don't enter a valid number, we ask them again and again oh so kindly
         number = input("That is not a valid number, could you please try again (0 ≤ n ≤ 99999999)? ")
     size = int(input("And how large would you like that number to be (1 ≤ s ≤ 10)? "))
-    while size < 1 or size > 10:
+    while size < 1 or size > 10: #The same goes 
         size = input("That is not a valid size, could you please try again (1 ≤ s ≤ 10)? ")
     return size, number
 
@@ -19,7 +19,7 @@ def segment_char(digit, segment_id):
         else:
             char = "-"
     elif segment_id == 3: #top left segment
-        if digit == 1 or digit == 2 or digit == 3:
+        if digit == 1 or digit == 2 or digit == 3 or digit == 7:
             char = " "
         else:
             char = "|"
@@ -72,13 +72,13 @@ def generate_line(line_id, number, size):
     return lcd_line
 
 def generate_display(size, number):
-    #
-    line_id = 0
-    while line_id < 5:
-        lcd_line = generate_line(line_id, number, size)
-        if line_id % 2 == 0:
+    #Generates each line of the lcd display, and prints it out
+    line_id = 0 
+    while line_id < 5: #There are five different lines, this runs the code 5 times
+        lcd_line = generate_line(line_id, number, size) #generates the line
+        if line_id % 2 == 0: #prints the horizontal lines out only once
             print(lcd_line)
-        elif line_id % 2 == 1:
+        elif line_id % 2 == 1: #prints the 
             for i in range(0, size):
                 print(lcd_line)
         line_id += 1
