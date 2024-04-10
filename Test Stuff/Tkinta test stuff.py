@@ -95,7 +95,7 @@ class Page_Three(tk.Frame): #my gif
         self.animation = tk.Label(self, image = self.image_frames[self.image_index])
         self.animation.pack()
 
-        self.after(100, self.animate())
+        self.after(100, self.animate)
     
     def load_image(self):
         target = "image0.gif"
